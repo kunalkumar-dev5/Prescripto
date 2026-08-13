@@ -8,6 +8,7 @@ const AdminContextProvider = (props) => {
 
     const [aToken, setAToken] = useState(localStorage.getItem('aToken') ? localStorage.getItem('aToken') : '')
     const [doctors, setDoctors] = useState([])
+    const [appointments, setAppointments] = useState([])
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000'
     const baseUrl = backendUrl.replace(/\/$/, '')
@@ -41,11 +42,39 @@ const AdminContextProvider = (props) => {
         }
     };
 
+    const getAllAppointments = async ()=>{
+        try {
+            const { data } = await axios.get(`${baseUrl}/api/admin/appointments`, { headers: { atoken: aToken } });
+            if (data.success) {
+                setAppointments(data.appointments || []);
+                console.log(data.appointments);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || error.message);
+        }
+    }
+
+    const cancelAppointment = async(appointmentId) =>{
+        try {
+            const {data} = await axios.post(backendUrl + '/api/admin/cancel-appointment', { appointmentId }, { headers: { atoken: aToken } })
+            if(data.success){
+                toast.success(data.message || 'Appointment canceled successfully')
+                getAllAppointments()
+            } else {
+                toast.error(data.message || 'Failed to cancel appointment')
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || error.message)
+        }
+    }
+
     const value = {
         aToken, setAToken,
-        backendUrl, doctors,
-        getAllDoctors,
-        changeAvailability
+        backendUrl, doctors, appointments,
+        getAllDoctors,setAppointments,getAllAppointments,
+        changeAvailability, cancelAppointment
     }
 
     return (
@@ -54,4 +83,4 @@ const AdminContextProvider = (props) => {
         </AdminContext.Provider>
     )
 }
-export default AdminContextProvider
+export default AdminContextProvider 
