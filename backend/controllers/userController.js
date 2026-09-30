@@ -298,7 +298,7 @@ const paymentRazorpay = async (req, res) => {
             currency: process.env.CURRENCY || 'INR',
             receipt: appointmentId,
         }
-
+        // creation of an order
         const order = await razorpayInstance.orders.create(options)
 
         res.json({ success: true, order })
