@@ -33,7 +33,7 @@ const AllApointments = () => {
           <div className='flex flex-wrap justify-between max-sm:gap-2 sm:grid sm:grid-cols-[0.5fr_3fr_1fr_3fr_3fr_1fr_1fr] items-center text-gray-500 py-3 px-6 border-b hover:bg-gray-50 ' key={index}>
             <p className='max-sm:hidden'>{index + 1}</p>
             <div className='flex items-center gap-2'>
-              <img className='w-8 rounded-full'
+              <img
                 src={item.userData.image || '/default-user.png'}
                 alt="Patient"
                 className='w-8 h-8 rounded-full object-cover'
@@ -45,16 +45,17 @@ const AllApointments = () => {
             <p>{slotDateFormat(item.slotDate)}, {item.slotTime}</p>
 
             <div className='flex items-center gap-2'>
-              <img className='w-8 rounded-full bg-gray-200'
+              <img
                 src={item.docData.image || '/default-user.png'}
                 alt="Patient"
-                className='w-8 h-8 rounded-full object-cover'
+                className='w-8 h-8 rounded-full object-cover bg-gray-200'
                 onError={(e) => e.target.src = '/default-user.png'}
               />
               <p>{item.docData.name}</p>
             </div>
             <p>{currency}{item.amount}</p>
-            {item.cancelled
+            {
+            item.cancelled
               ? <p className='text-red-400 text-xs font-medium'>Cancelled</p>
               : <img onClick={() => cancelAppointment(item._id)} className='w-10 cursor-pointer' src={assets.cancel_icon} alt="" />
             }
