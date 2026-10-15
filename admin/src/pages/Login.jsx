@@ -26,6 +26,8 @@ const Login = () => {
             if (state === 'Admin') {
                 const { data } = await axios.post(loginUrl, { email, password })
                 if (data.success) {
+                    localStorage.removeItem('dToken')
+                    setDToken('')
                     localStorage.setItem('aToken', data.token)
                     setAToken(data.token)
                 } else {
@@ -34,6 +36,8 @@ const Login = () => {
             } else {
                 const { data } = await axios.post(`${baseUrl.replace(/\/$/, '')}/api/doctor/login`, { email, password })
                 if (data.success) {
+                    localStorage.removeItem('aToken')
+                    setAToken('')
                     localStorage.setItem('dToken', data.token)
                     setDToken(data.token)
                     console.log(data.token)

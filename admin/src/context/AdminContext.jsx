@@ -63,6 +63,7 @@ const AdminContextProvider = (props) => {
             if(data.success){
                 toast.success(data.message || 'Appointment canceled successfully')
                 getAllAppointments()
+                getDashData()
             } else {
                 toast.error(data.message || 'Failed to cancel appointment')
             }
