@@ -121,14 +121,14 @@ const doctorDashboard = async (req, res) => {
 
         let earnings = 0
         appointments.map((item) => {
-            if(item.isCompleted || item.payment) {
+            if (item.isCompleted || item.payment) {
                 earnings += item.amount
             }
         })
         let patients = []
 
         appointments.map((item) => {
-            if(!patients.includes(item.userId)){
+            if (!patients.includes(item.userId)) {
                 patients.push(item.userId)
             }
         })
@@ -146,4 +146,54 @@ const doctorDashboard = async (req, res) => {
     }
 }
 
-export { changeAvailability, doctorList, loginDoctor, appointmentsDoctor, appointmentCompleted, appointmentCancel, doctorDashboard }
+//  API to get doctor profile data for doctor panel
+const doctorProfile = async (req, res) => {
+
+    try {
+        const { docId } = req.body
+        const profile = await doctorModel.findById(docId).select('-password').lean()
+        if (profile) {
+            const feeVal = profile.fee ?? profile.fees ?? 0
+            profile.fee = feeVal
+            profile.fees = feeVal
+        }
+        res.json({ success: true, profileData: profile })
+
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
+
+// API to update doctor profile data for doctor panel
+const updateDoctorProfile = async (req, res) => {
+
+    try {
+        const { docId, fees, fee, address, available } = req.body
+        const updatedFee = fee !== undefined ? Number(fee) : (fees !== undefined ? Number(fees) : undefined)
+        const updatePayload = { address, available }
+        if (updatedFee !== undefined && !Number.isNaN(updatedFee)) {
+            updatePayload.fee = updatedFee
+            updatePayload.fees = updatedFee
+        }
+
+        await doctorModel.findByIdAndUpdate(docId, updatePayload)
+
+        res.json({ success: true, message: "Profile updated successfully" })
+
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
+export {
+    changeAvailability,
+    doctorList,
+    loginDoctor,
+    appointmentsDoctor,
+    appointmentCompleted,
+    appointmentCancel,
+    doctorDashboard,
+    doctorProfile,
+    updateDoctorProfile
+}

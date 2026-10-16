@@ -82,9 +82,8 @@ const Docters = () => {
                   alt={item.name}
                 />
                 <div className='p-5'>
-                  <div className='mb-3 flex items-center gap-2 text-sm text-green-500'>
-                    <span className='h-2 w-2 rounded-full bg-green-500' />
-                    <span>Available</span>
+                  <div className={`flex items-center gap-2 text-sm text-center ${item.available ? 'text-green-500' : 'text-gray-500'}`}>
+                    <p className={`w-2 h-2 ${item.available ? 'bg-green-500' : 'bg-gray-500'} rounded-full`}></p><p>{item.available ? 'Available' : 'Not Available'}</p>
                   </div>
                   <h2 className='text-lg font-semibold text-gray-900'>{item.name}</h2>
                   <p className='text-sm text-gray-600'>{item.speciality}</p>
